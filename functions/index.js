@@ -2,6 +2,7 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+
 admin.initializeApp();
 
 var db = admin.firestore();
@@ -9,7 +10,7 @@ var db = admin.firestore();
 const MAX_NOTIFICATIONS_PER_DAY = 150;
 
 exports.sendPushNotification = functions.https.onRequest(async (req, res) => {
-  console.log('Received payload', req.body);
+  if (debug()) console.log('Received payload', req.body);
   var today = getToday();
   var token = req.body.push_token;
   var ref = db.collection('rateLimits').doc(today).collection('tokens').doc(token);
@@ -48,7 +49,7 @@ exports.sendPushNotification = functions.https.onRequest(async (req, res) => {
     }
   }
 
-  console.log('Notification payload', JSON.stringify(payload));
+  if (debug()) console.log('Notification payload', JSON.stringify(payload));
 
   var docExists = false;
   var docData = {
@@ -89,7 +90,7 @@ exports.sendPushNotification = functions.https.onRequest(async (req, res) => {
     return handleError(res, 'sendNotification', err);
   }
 
-  console.log('Successfully sent message:', messageId);
+  if (debug()) console.log('Successfully sent message:', messageId);
 
   await setRateLimitDoc(ref, docExists, docData, res);
 
@@ -105,10 +106,10 @@ exports.sendPushNotification = functions.https.onRequest(async (req, res) => {
 async function setRateLimitDoc(ref, docExists, docData, res) {
   try {
     if(docExists) {
-      console.log('Updating existing doc!');
+      if (debug()) console.log('Updating existing doc!');
       await ref.update(docData);
     } else {
-      console.log('Creating new doc!');
+      if (debug()) console.log('Creating new doc!');
       await ref.set(docData);
     }
   } catch(err) {
@@ -150,4 +151,8 @@ function getRateLimitsObject(doc) {
     remaining: (MAX_NOTIFICATIONS_PER_DAY - doc.deliveredCount),
     resetsAt: new Date(d.getFullYear(), d.getMonth(), d.getDate()+1)
   };
+}
+
+function debug() {
+    return false;
 }
