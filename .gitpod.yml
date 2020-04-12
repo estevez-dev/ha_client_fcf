@@ -6,7 +6,7 @@ tasks:
       echo "Getting dependencies..."
       npm install
       echo "Logging in..."
-      firebase login:ci
+      firebase login:ci --no-localhost
 
     command: |
       cd /workspace/ha_client_fcf/functions
