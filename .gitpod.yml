@@ -1,5 +1,5 @@
 tasks:
-  - init:
+  - init: |
       echo "Installing Firebase tools..."
       npm install -g firebase-tools
       cd /workspace/ha_client_fcf/functions
@@ -8,7 +8,7 @@ tasks:
       echo "Logging in..."
       firebase login:ci
 
-    command:
+    command: |
       cd /workspace/ha_client_fcf/functions
       echo "Make sure we are using the latest versions of Firebase tools and libraries..."
       npm install firebase-functions@latest firebase-admin@latest --save
