@@ -11,9 +11,9 @@ const MAX_NOTIFICATIONS_PER_DAY = 50;
 
 exports.sendPushNotification = functions.https.onRequest(async (req, res) => {
   if (debug()) console.log('Received payload', req.body);
-  var today = getToday();
+  var currentRateLimitDocName = getCurrentRateLimitsDocName();
   var token = req.body.push_token;
-  var ref = db.collection('rateLimits').doc(today).collection('tokens').doc(token);
+  var ref = db.collection('rateLimits').doc(currentRateLimitDocName).collection('tokens').doc(token);
 
   var payload = {
     notification: {
@@ -133,7 +133,7 @@ function handleError(res, step, incomingError) {
   });
 }
 
-function getToday() {
+function getCurrentRateLimitsDocName() {
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
   var mm = String(today.getMonth() + 1).padStart(2, '0');
