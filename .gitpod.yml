@@ -5,11 +5,11 @@ tasks:
       cd /workspace/ha_client_fcf/functions
       echo "Getting dependencies..."
       npm install
-      echo "Logging in..."
-      firebase login:ci --no-localhost
 
     command: |
       cd /workspace/ha_client_fcf/functions
       echo "Make sure we are using the latest versions of Firebase tools and libraries..."
       npm install firebase-functions@latest firebase-admin@latest --save
       npm install -g firebase-tools
+      echo "Logging in..."
+      firebase login:ci --no-localhost
