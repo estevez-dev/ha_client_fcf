@@ -1,45 +1,4 @@
 module.exports = {
-
-    createLegacyPayload: function createLegacyPayload(req) {
-        var payload = {
-            notification: {
-            body: req.body.message
-            },
-            android: {
-                priority: 'HIGH',
-                notification: {
-                    sound: 'default',
-                    icon: 'mini_icon',
-                    channel_id: 'ha_notify'
-                }
-            },
-            token: token,
-        };
-
-        if(req.body.title) {
-            payload.notification.title = req.body.title;
-        }
-
-        if(req.body.data) {
-            if(req.body.data.android) {
-            payload.android = req.body.data.android;
-            }
-            if(req.body.data.apns) {
-            payload.apns = req.body.data.apns;
-            }
-            if(req.body.data.data) {
-            payload.data = req.body.data.data;
-            }
-            if(req.body.data.webpush) {
-            payload.webpush = req.body.data.webpush;
-            }
-        }
-
-        if (debug()) console.log('Notification payload', JSON.stringify(payload));
-
-        return { updateRateLimits: true, payload: payload };
-    },
-
     createPayload: function createPayload(req) {
         let payload = {
         android: {},
