@@ -75,7 +75,7 @@ exports.sendPushNotification = functions.https.onRequest(async (req, res) => {
     }
 
     if(docData.deliveredCount > MAX_NOTIFICATIONS_PER_DAY) {
-        return res.status(429).send({
+        return res.status(429).json({
         errorType: 'RateLimited',
         message: 'The given target has reached the maximum number of notifications allowed per day. Please try again later.',
         target: token,
@@ -99,7 +99,7 @@ exports.sendPushNotification = functions.https.onRequest(async (req, res) => {
 
     await setRateLimitDoc(ref, docExists, docData, res);
 
-    return res.status(201).send({
+    return res.status(201).json({
         messageId: messageId,
         sentPayload: payload,
         target: token,
@@ -138,7 +138,7 @@ function legacyGetCurrentRateLimitsDocName() {
 function legacyHandleError(res, step, incomingError) {
     if (!incomingError) return null;
     console.error('InternalError during', step, incomingError);
-    return res.status(500).send({
+    return res.status(500).json({
         errorType: 'InternalError',
         errorStep: step,
         message: incomingError.message,
@@ -156,10 +156,10 @@ async function handleRequest(req, res, payloadHandler) {
     var today = getToday();
     var token = req.body.push_token;
     if (!token) {
-        return res.status(403).send({ 'errorMessage': 'Missed token' });
+        return res.status(403).json({ 'errorMessage': 'Missed token' });
     }
     if (token.indexOf(':') === -1) {
-        return res.status(403).send({'errorMessage': 'Invalid token'});
+        return res.status(403).json({'errorMessage': 'Invalid token'});
     }
 
     var workerResult = payloadHandler(req);
@@ -189,7 +189,7 @@ async function handleRequest(req, res, payloadHandler) {
     }
 
     if (updateRateLimits && docData.deliveredCount > MAX_NOTIFICATIONS_PER_DAY) {
-        return res.status(429).send({
+        return res.status(429).json({
             errorType: 'RateLimited',
             message: 'You have exited the maximum number of notifications allowed per day. Please try again later.',
             target: token,
@@ -219,7 +219,7 @@ async function handleRequest(req, res, payloadHandler) {
         if (debug) console.log('Not updating rate limits because notification is critical or command');
     }
 
-    return res.status(201).send({
+    return res.status(201).json({
         messageId: messageId,
         sentPayload: payload,
         target: token,
@@ -255,7 +255,7 @@ function handleError(res, payload, step, incomingError) {
     } else {
         console.error('InternalError during', step, incomingError);
     }
-    return res.status(500).send({
+    return res.status(500).json({
         errorType: 'InternalError',
         errorStep: step,
         message: incomingError.message,
