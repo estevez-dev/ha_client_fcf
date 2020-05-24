@@ -151,6 +151,10 @@ exports.pushNotifyV2 = functions.https.onRequest(async (req, res) => {
     return handleRequest(req, res, worker.createPayload);
 });
 
+exports.pushNotifyV3 = functions.https.onRequest(async (req, res) => {
+    return handleRequest(req, res, worker.createPayloadV3);
+});
+
 async function handleRequest(req, res, payloadHandler) {
     if (debug()) console.log('Received payload', req.body);
     var today = getToday();
@@ -168,7 +172,7 @@ async function handleRequest(req, res, payloadHandler) {
 
     payload['token'] = token;
 
-    var ref = db.collection('rateLimitsV2').doc(today).collection('tokens').doc(token);
+    var ref = db.collection(workerResult.collectionName).doc(today).collection('tokens').doc(token);
 
     var docExists = false;
     var docData = {
