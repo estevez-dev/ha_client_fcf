@@ -203,7 +203,7 @@ async function handleRequest(req, res, payloadHandler) {
 
     docData.totalCount = docData.totalCount + 1;
 
-    if (debug) console.log('Sending payload', JSON.stringify(payload));
+    if (debug()) console.log('Sending payload', JSON.stringify(payload));
 
     var messageId;
     try {
@@ -220,7 +220,7 @@ async function handleRequest(req, res, payloadHandler) {
     if (updateRateLimits) {
         await writeRateLimits(ref, docExists, docData, res);
     } else {
-        if (debug) console.log('Not updating rate limits because notification is critical or command');
+        if (debug()) console.log('Not updating rate limits because notification is critical or command');
     }
 
     return res.status(201).json({
