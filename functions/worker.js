@@ -60,8 +60,8 @@ module.exports = {
       if (req.body.data.image) {
         payload.data.imageUrl = req.body.data.image;
       }
-      for (const key of ['color', 'channelId', 'image', 'tag']) {
-        if (req.body.data[key]) {
+      for (const key of ['color', 'channelId', 'image', 'tag', 'dismiss', 'autoDismiss']) {
+        if (req.body.data[key] !== null) {
           payload.data[key] = String(req.body.data[key])
         }
       }
