@@ -61,7 +61,7 @@ module.exports = {
         payload.data.imageUrl = req.body.data.image;
       }
       for (const key of ['color', 'channelId', 'image', 'tag', 'dismiss', 'autoDismiss']) {
-        if (req.body.data[key] !== null) {
+        if (req.body.data[key] !== null && typeof req.body.data[key] !== 'undefined') {
           payload.data[key] = String(req.body.data[key])
         }
       }
